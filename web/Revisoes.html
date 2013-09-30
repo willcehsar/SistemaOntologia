@@ -1,0 +1,15 @@
+==================================================
+===========CONTROLE DE VERSÕES====================
+==================================================
+
+- V 1.1 - DIA 24-09-2013
+  MUDANÇA NO SERVLET ServletPercorrerOntologia PARA RETORNAR PARA O JSP buscaTextual.jsp
+  MUDANÇA NO buscaTextual.jsp, porque não carregava a div atualizar.
+  FOI FEITO UMA CÓPIA DO inde_bkp.jsp E COLOCADA NO buscaTextual.jsp E DEPOIS ALTERADO O
+  CSS/INCLUDES, DE FORMA QUE AGORA ESTÁ FUNCIONANDO NORMAL.
+
+- v 1.2 - DIA 27-09-2013
+  ADICIONEI A LINHA ABAIXO PARA PEGAR O HOST E PORTA DINAMICO.
+  ESTÁ NO JAVASCRIPT DA PAGINA DE BUSCA.
+  url : "http://<%= request.getServerName() + ":" + request.getServerPort() %>/SistemaOntologia/ServletPercorrerOntologia", 
+ 
