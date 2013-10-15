@@ -13,7 +13,7 @@ facilitar a busca e catalogação de livros para os bibliotecários.
 Nessa primeira etapa o projeto conta com os conceitos de linguagem de programção dentro da ementa do curso de Tecnlogia em
 Sistemas para Internet do IFSP.
 
-Tecnlogias Utilziadas: Java Web (JSP e Sevlets)/
+Tecnologias Utilziadas: Java Web (JSP e Sevlets)/
                        Neo4j - Banco de Dados em Grafo/
                        JavaScript - arbor.js
                        
@@ -34,6 +34,6 @@ easy searching and cataloging books for librarians.
 In this first stage the project has the concepts of language programmatically as within the menu of course tecnlogia in
 Internet Systems IFSP.
 
-We utilize Tecnlogias:  Web Java (JSP and Sevlets)/
-                        Neo4j - Graph Database/
-                        JavaScript - arbor.js                
+Technologies: Web Java (JSP and Sevlets)/
+              Neo4j - Graph Database/
+              JavaScript - arbor.js                
