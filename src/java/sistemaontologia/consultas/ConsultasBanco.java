@@ -112,7 +112,7 @@ public class  ConsultasBanco {
         //percorre os atributos do nó final
         String noFinal ="";
         for (String cabecalho : x.getPropertyKeys()){                              
-           noFinal += cabecalho + ": " + x.getProperty(cabecalho).toString() + ". ";
+           noFinal += x.getProperty(cabecalho).toString() + " ";
         }        
         
         percorre.setNoFinal(noFinal);
@@ -124,4 +124,5 @@ public class  ConsultasBanco {
        //retorna a lista
        return(lista);      
    }// fim do método buscarConceitos
+   
 }//fim da classe

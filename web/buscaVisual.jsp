@@ -1,65 +1,154 @@
-<%-- 
-    Document   : buscaVisual
-    Created on : 29/09/2013, 15:37:57
-    Author     : Filipe
---%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Busca Visual</title>
+<head>
+    
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-2.0.2.min.js"></script>
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/arbor/arbor.js"></script>
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/arbor/arbor-tween.js"></script>
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/arbor/graphics.js"></script>
+     <script type="text/javascript" src="${pageContext.request.contextPath}/js/arbor/renderer.js"></script>
+   
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+
   
-        <script type="text/javascript" src="${pageContext.request.contextPath}/js/vivagraph/vivagraph.min.js.js"></script>
-
-        <script type="text/javascript">
+  <script type="text/javascript">      
+      $(document).ready(function() {
+        $("#enviar").click(function() {
             
-        function onLoad() { 
-            var graph = Viva.Graph.graph();
+          conceito = $("#conceito").val();            
+          selecao = $("#selecao").val();
+          tipoBusca = $("#tipoBusca").val();            
+          var parameters = "conceito=" + conceito + "&selecao=" + selecao + "&tipoBusca=" + tipoBusca;
+            
+          $.getJSON("http://<%= request.getServerName() + ":" + request.getServerPort() %>/SistemaOntologia/ServletPercorrerOntologia", parameters, function(json){                                                                                
+              desenhaGrafo(json);
+          });
+              
+          return false;
+                          
+       });   
+      });
+   </script>
+   
+<script >     
+       function desenhaGrafo(obj){ //obj é o json recebido como parâmetro
+        
+          /*  var canvas  = document.getElementById('quadro');
+            if(!canvas.getContext) return;
+            var ctx     = canvas.getContext('2d');
+            var w       = canvas.width = canvas.height = 100;
+            var drawn   = null;
+            var d       = ctx.getImageData(0, 0, w, w); //image data 
+            var len     = d.data.length;
+            for(var i =0; i< len; i++) {
+              if(!d.data[i]) {
+                drawn = false;
+              }else if(d.data[i]) {
+                var gfx = arbor.Graphics('quadro')
+                gfx.clearCanvas
+              }
+            }*/
 
-            // Construct the graph
-            graph.addNode('anvaka', {url : 'https://secure.gravatar.com/avatar/91bad8ceeec43ae303790f8fe238164b'});
-            graph.addNode('manunt', {url : 'https://secure.gravatar.com/avatar/c81bfc2cf23958504617dd4fada3afa8'});
-            graph.addNode('thlorenz', {url : 'https://secure.gravatar.com/avatar/1c9054d6242bffd5fd25ec652a2b79cc'});
-            graph.addNode('bling', {url : 'https://secure.gravatar.com/avatar/24a5b6e62e9a486743a71e0a0a4f71af'});
-            graph.addNode('diyan', {url : 'https://secure.gravatar.com/avatar/01bce7702975191fdc402565bd1045a8?'});
-            graph.addNode('pocheptsov', {url : 'https://secure.gravatar.com/avatar/13da974fc9716b42f5d62e3c8056c718'});
-            graph.addNode('dimapasko', {url : 'https://secure.gravatar.com/avatar/8e587a4232502a9f1ca14e2810e3c3dd'});
+            var sys = arbor.ParticleSystem()             
+              sys.parameters({ gravity:false})                  
+              //pega o canvas
+              sys.renderer = Renderer('#quadro');
+ 
+           var colour = [];            
+                colour[0] = orange = "#EEB211",               
+                colour[1] = purple = "#941e5e",
+                colour[2] = limegreen = "#c1d72e",
+                colour[3] = darkgreen = "#619b45",
+                colour[4] = lightblue = "#009fc3",
+                colour[5] = darkblue = "#21526a",
+                colour[6] = pink = "#d11b67", 
+                colour[7] = red = "#b01700";
+        
+           //adiciona o nó inicial
+           var noInicial = sys.addNode('noInicial',{'color':colour[5], 
+                                        'shape':'dot', 
+                                        'radius':30,                                         
+                                        'alpha':1,                                         
+                                        'label': conceito = $("#conceito").val(),});              
+              
+           //adiciona o nó Final em um array noFinal[]   
+           var noFinal = [];
+           for(i=0; i<obj.length; i++){ 
+               noFinal[i] = sys.addNode(obj[i].noFinal,
+                {'label': obj[i].noFinal, 'color':colour[i], 'alpha': 0 });
+           }
+           
+          //adiciona a aresta entre o noInicial, noFinal, passado os parametros 
+          //para a configuração da aresta '{'length':.3, 'label':obj[i].tipoRelacionamento, 'directed':true}'
+          var grafo;            
+          for(i=0; i<obj.length; i++){ 
+            grafo += sys.addEdge(noInicial, noFinal[i],{'length':0.1, 'label':obj[i].tipoRelacionamento, 'directed':true});               
+          }
 
-            graph.addLink('anvaka', 'manunt');
-            graph.addLink('anvaka', 'thlorenz');
-            graph.addLink('anvaka', 'bling');
-            graph.addLink('anvaka', 'diyan');
-            graph.addLink('anvaka', 'pocheptsov');
-            graph.addLink('anvaka', 'dimapasko');
+          //passa a variavel grafo(é um json)para ser desenhado o grafo
+          sys.graft(grafo);
 
-            // Set custom nodes appearance
-            var graphics = Viva.Graph.View.svgGraphics();
-            graphics.node(function(node) {
-                   // The function is called every time renderer needs a ui to display node
-                   return Viva.Graph.svg('image')
-                         .attr('width', 24)
-                         .attr('height', 24)
-                         .link(node.data.url); // node.data holds custom object passed to graph.addNode();
-                })
-                .placeNode(function(nodeUI, pos){
-                    // Shift image to let links go to the center:
-                    nodeUI.attr('x', pos.x - 12).attr('y', pos.y - 12);
-                });
-
-            var renderer = Viva.Graph.View.renderer(graph, 
-                {
-                    graphics : graphics
-                });
-            renderer.run();
-        }
+                  
+        }; 
+            
 
 </script>
-
-    </head>
-    <body onload="onLoad()">
-        <h1>Busca Visual</h1>
-               
-    </body>
+  
+  
+ 
+ <body>
+     
+     <div class="container-narrow">
+     
+     <div class="row-fluid marketing" style="margin: 60px 0 0 0;">   
+     
+     <jsp:include page="/includes/menu.jsp"/>
+     
+     <%-- <div class="jumbotron" style="padding: 0px;">
+            <h1>Busca Visual</h1>
+            <p class="lead">
+                Visualização dos conceitos e relacionamentos em grafo
+            </p>
+        </div>--%>
+     
+     <form id="fomulario">         
+         <table>
+                <tr>
+                    <td width="224">
+                        <label>Conceito</label>
+                    </td> 
+                </tr>
+                
+                <tr>
+                    <td> 
+                        <input type="text" id ="conceito" name="conceito" style="width:260px;" />
+                    </td>
+                    
+                    <input type="hidden"id="selecao" onchange="r"  value="r" />
+                    <%--
+                    <td width="236">
+                       
+                            <select name="select" id="selecao">
+                                <option name="click" onchange="l" value="l">Busca por Livro</option>
+                                <option name="click" onchange="r"  value="r">Busca por Relacionamento</option>
+                            </select>                       
+                    </td>
+                    --%>
+                    <td>
+                    
+                    <td>
+                        <input type="submit" id="enviar"   name="botaoEnviar" value="Buscar" style="margin-bottom: 10px; margin-left: 30px;"
+                               class="btn btn-success btn-large" />
+                        
+                        <input id="tipoBusca" value="visual" type="hidden"/>      
+                    </td>                    
+                </tr>
+          </table>
+       </form> 
+     <%--canvas é onde o grafo será mostrado--%>
+     <canvas id="quadro" width="900" height="500" ></canvas>
+    <%--<jsp:include page="/includes/rodape.jsp"/> --%>
+</body>
 </html>

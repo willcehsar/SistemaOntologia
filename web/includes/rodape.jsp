@@ -12,7 +12,7 @@
         <div class="row">
             
             <div class="span6">
-                <p>Desenvolvido por  Willian César  e Filipe Navas Rodrigues</P>
+                <p>Desenvolvido por Filipe Navas Rodrigues & Willian Cesar</P>
 
                 <p><b>Orientadores</b> <br>
                     Profª Dra. Rosana Ferrareto Lourenço Rodrigues <br>

@@ -11,7 +11,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Busca Visual</title>
   
-        <script type="text/javascript" src="${pageContext.request.contextPath}/js/vivagraph/vivagraph.min.js.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/vivagraph/vivagraph.js"></script>
 
         <script type="text/javascript">
             

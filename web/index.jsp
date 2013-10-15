@@ -27,7 +27,7 @@
                   Catálogo Online para Bibliotecas V 1.1
               </p>
               <a class="btn btn-large btn-success" href="buscaTextual.jsp">Busca Textual</a>
-              <a class="btn btn-large btn-info" href="#">Busca Visual</a>
+              <a class="btn btn-large btn-info" href="buscaVisual.jsp">Busca Visual</a>
 
          </div>
           

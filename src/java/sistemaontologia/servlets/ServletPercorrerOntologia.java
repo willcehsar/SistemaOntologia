@@ -4,8 +4,8 @@
  */
 package sistemaontologia.servlets;
 
+import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,26 +19,15 @@ import sistemaontologia.consultas.ConsultasBanco;
 import sistemaontologia.entidade.Livro;
 import sistemaontologia.entidade.PercorreConceito;
 
-/**
- *
- * @author Willian
- */
+
 public class ServletPercorrerOntologia extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP
-     * <code>GET</code> and
-     * <code>POST</code> methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+        
+        RequestDispatcher requestDispatcher = null;
+        List<PercorreConceito> percorre = null;
         
    //   String conceito = request.getParameter("conceito");
       String acao = request.getParameter("selecao");
@@ -58,28 +47,41 @@ public class ServletPercorrerOntologia extends HttpServlet {
             
             
             //redireciona a página para a pégina inicial (index.jsp)
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/buscaTextual.jsp");  
+            requestDispatcher = request.getRequestDispatcher("/buscaTextual.jsp");  
             requestDispatcher.forward(request, response);
             
         }else if(acao.equals("r")) {
             
             ConsultasBanco consulta = new ConsultasBanco();
            
-            List<PercorreConceito> percorre = new ArrayList<PercorreConceito>();
+            percorre = new ArrayList<PercorreConceito>();
             
             percorre = consulta.bucarConceitos(request.getParameter("conceito"));
             
-            request.setAttribute("percorre", percorre);
-            
-            
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/buscaTextual.jsp");  
-            requestDispatcher.forward(request, response);        
-        }//fim do else
-       
+            //redireciona o resultado de acordo com a requisição da página
+            String pagina = request.getParameter("tipoBusca");            
+            if(pagina.equals("textual")){
+                
+                request.setAttribute("percorre", percorre);
+                requestDispatcher = request.getRequestDispatcher("/buscaTextual.jsp");              
+                requestDispatcher.forward(request, response);       
+                
+            } else if(pagina.equals("visual")) {                
+               
+               //retorna um JSON para o javascript
+               String json = new Gson().toJson(percorre);                
+               response.setContentType("application/json");
+               response.setCharacterEncoding("UTF-8");
+               response.getWriter().write(json);            
+            }
+        }//fim do if        
       }catch (Exception exc){
+          exc.printStackTrace();
       }finally {            
-       out.close();
-    }//fim do finally
+      
+      }//fim do finally
+       
+                
   }// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP
@@ -94,7 +96,8 @@ public class ServletPercorrerOntologia extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            processRequest(request, response);
+             processRequest(request, response); 
+             
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ServletPercorrerOntologia.class.getName()).log(Level.SEVERE, null, ex);
         }
